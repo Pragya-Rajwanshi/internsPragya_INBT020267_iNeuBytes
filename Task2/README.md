@@ -120,7 +120,3 @@ Task2_Sentiment/
 Pragya Rajwanshi
 
 B.Tech CSE (AI)
-
-Note:
-The original IMDB dataset has not been included in this repository because of GitHub file size limitations. Download the dataset from:
-https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
