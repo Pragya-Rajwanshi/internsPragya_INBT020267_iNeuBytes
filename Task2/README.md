@@ -21,6 +21,15 @@ Dataset: IMDb Movie Reviews Dataset
 - 25,000 Positive
 - 25,000 Negative
 
+This project uses the IMDB Movie Reviews Dataset for sentiment analysis.
+
+**Note:** The original dataset is not included in this repository because it exceeds GitHub's file size limits.
+
+You can download it from:
+https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
+
+After downloading, place the dataset inside the `Task2/dataset/` directory before running the project.
+
 ---
 
 ## Technologies Used
