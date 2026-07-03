@@ -1,0 +1,4 @@
+Model,Accuracy,Precision,Recall,F1 Score
+Logistic Regression,0.8869,0.8771,0.902,0.8893
+Support Vector Machine,0.8891,0.8835,0.8984,0.8909
+LSTM Neural Network,0.8831,0.877,0.8932,0.8851
