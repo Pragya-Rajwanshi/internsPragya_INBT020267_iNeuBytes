@@ -64,8 +64,11 @@ search_history = []
 # LOAD DATA
 # ==============================
 
-MODEL_DIR = "model"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_DIR = os.path.join(BASE_DIR, "model")
 SIMILARITY_PATH = os.path.join(MODEL_DIR, "movie_similarity.pkl")
+MATRIX_PATH = os.path.join(MODEL_DIR, "movie_matrix.pkl")
 
 os.makedirs(MODEL_DIR, exist_ok=True)
 
@@ -75,19 +78,19 @@ if not os.path.exists(SIMILARITY_PATH):
     url = "https://drive.google.com/uc?id=17BeVj2trDrwqHyjh26LF9INN3uwGHXAe"
 
     gdown.download(
-        url=url,
-        output=SIMILARITY_PATH,
+        url,
+        SIMILARITY_PATH,
         quiet=False,
         fuzzy=True
     )
 
-    print("Download completed.")
+movie_matrix = joblib.load(MATRIX_PATH)
+similarity = joblib.load(SIMILARITY_PATH)
 
-movie_matrix = joblib.load("model/movie_matrix.pkl")
-similarity = joblib.load("model/movie_similarity.pkl")
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
-movies = pd.read_csv("data/movies.csv")
-links = pd.read_csv("data/links.csv")
+movies = pd.read_csv(os.path.join(DATA_DIR, "movies.csv"))
+links = pd.read_csv(os.path.join(DATA_DIR, "links.csv"))
 
 # Remove rows having no TMDB id
 links = links.dropna(subset=["tmdbId"])
