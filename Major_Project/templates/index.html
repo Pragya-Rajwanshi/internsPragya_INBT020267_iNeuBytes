@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Movie Recommendation System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#141E30,#243B55);
+
+min-height:100vh;
+
+padding:40px;
+
+}
+
+.container{
+    width:95%;
+    max-width:1500px;
+    margin:40px auto;
+    padding:40px;
+
+    background:white;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+
+    text-align:center;
+}
+
+.header{
+
+margin-bottom:35px;
+
+}
+
+.header h1{
+
+font-size:42px;
+
+font-weight:700;
+
+color:#111827;
+
+margin-bottom:10px;
+
+}
+
+.subtitle{
+
+font-size:20px;
+
+color:#4b5563;
+
+margin-bottom:8px;
+
+font-weight:500;
+
+}
+
+.powered{
+
+font-size:15px;
+
+color:#6b7280;
+
+letter-spacing:1px;
+
+}
+
+input{
+
+width:65%;
+
+padding:16px 22px;
+
+font-size:18px;
+
+border:2px solid #d1d5db;
+
+border-radius:50px;
+
+outline:none;
+
+transition:all .3s ease;
+
+box-sizing:border-box;
+
+margin-bottom:20px;
+
+}
+
+input:focus{
+
+border-color:#2563eb;
+
+box-shadow:0 0 15px rgba(37,99,235,.25);
+
+}
+
+button{
+
+padding:16px 40px;
+
+font-size:18px;
+
+font-weight:600;
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+color:white;
+
+border:none;
+
+border-radius:50px;
+
+cursor:pointer;
+
+transition:all .3s ease;
+
+box-shadow:0 8px 20px rgba(37,99,235,.30);
+
+}
+
+button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 15px 30px rgba(37,99,235,.40);
+
+background:linear-gradient(135deg,#1d4ed8,#1e40af);
+
+}
+
+.theme-btn{
+
+position:absolute;
+top:25px;
+right:30px;
+
+padding:10px 20px;
+
+font-size:15px;
+
+background:#111827;
+
+color:white;
+
+border:none;
+
+border-radius:30px;
+
+cursor:pointer;
+
+transition:.3s;
+
+z-index:1000;
+
+}
+
+.theme-btn:hover{
+
+background:#2563eb;
+
+}
+
+.result{
+
+margin-top:35px;
+
+text-align:left;
+
+}
+
+.section-title{
+
+display:inline-block;
+
+padding:12px 22px;
+
+margin:20px 0;
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+color:white;
+
+font-size:22px;
+
+font-weight:600;
+
+border-radius:12px;
+
+box-shadow:0 8px 20px rgba(37,99,235,.25);
+
+}
+
+.result ul{
+
+list-style:none;
+
+}
+
+.result li{
+
+padding:10px;
+
+background:#f4f4f4;
+
+margin-bottom:10px;
+
+border-radius:8px;
+
+font-size:18px;
+
+}
+
+.suggestions-box{
+    width:100%;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:8px;
+    margin-top:5px;
+    max-height:220px;
+    overflow-y:auto;
+    position:relative;
+}
+
+.suggestion-item{
+    padding:12px;
+    cursor:pointer;
+    border-bottom:1px solid #eee;
+}
+
+.suggestion-item:hover{
+    background:#f5f5f5;
+}
+
+.movie-card{
+
+display:flex;
+
+gap:25px;
+
+margin:25px 0;
+
+padding:20px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.92);
+
+backdrop-filter:blur(12px);
+
+box-shadow:0 12px 35px rgba(0,0,0,.12);
+
+border:1px solid rgba(255,255,255,.35);
+
+transition:all .35s ease;
+
+align-items:flex-start;
+
+border-left:6px solid transparent;
+
+}
+
+.movie-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.selected-movie-card{
+
+display:flex;
+gap:35px;
+align-items:flex-start;
+
+padding:35px;
+
+border-radius:25px;
+
+position:relative;
+
+overflow:hidden;
+
+color:white;
+
+box-shadow:0 20px 50px rgba(0,0,0,.45);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(10px);
+
+transition:.35s;
+
+}
+
+.selected-movie-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.45),
+        0 0 40px rgba(59,130,246,.25);
+}
+
+.selected-movie-card img{
+
+width:220px;
+
+border-radius:18px;
+
+box-shadow:0 15px 35px rgba(0,0,0,.5);
+
+transition:.3s;
+
+}
+
+.selected-movie-card img:hover{
+
+    transform:scale(1.04);
+}
+
+.selected-movie-card h3{
+
+    font-size:40px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+    color:#fff;
+}
+
+.movie-meta{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    margin:15px 0;
+}
+
+.movie-meta span{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:14px;
+}
+
+.movie-card img{
+    width:180px;
+    height:270px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.movie-card h3{
+    margin-bottom:10px;
+}
+
+.selected-movie-card .overview{
+
+font-size:17px;
+
+line-height:1.8;
+
+color:#e5e7eb;
+
+margin-top:15px;
+
+max-width:700px;
+
+}
+
+.streaming{
+
+    margin:10px 0;
+
+    font-size:15px;
+
+    color:#2563eb;
+
+    font-weight:600;
+
+}
+
+.watch-btn{
+
+    background:#ef4444;
+
+    border:none;
+
+    padding:14px 28px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.watch-btn:hover{
+
+    background:#dc2626;
+
+    transform:translateY(-2px);
+}
+
+.save-btn{
+
+    background:#ec4899;
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:12px;
+
+    transition:.3s;
+}
+
+.save-btn:hover{
+
+    transform:translateY(-2px);
+
+    background:#db2777;
+}
+
+.rating-badge{
+
+    display:inline-block;
+
+    background:#facc15;
+
+    color:#111827;
+
+    padding:6px 14px;
+
+    border-radius:30px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+}
+
+.poster-box{
+
+    background:rgba(255,255,255,.05);
+
+    padding:12px;
+
+    border-radius:20px;
+}
+
+.match{
+    display:inline-block;
+    background:#16a34a;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.excellent{
+    background:#16a34a;
+}
+
+.good{
+    background:#f59e0b;
+}
+
+.average{
+    background:#ef4444;
+}
+
+.confidence{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:600;
+    display:inline-block;
+    font-size:14px;
+}
+
+.confidence.excellent{
+    background:#d4edda;
+    color:#155724;
+}
+
+.confidence.good{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.confidence.average{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+.reason{
+    margin-top:10px;
+    padding:10px 14px;
+    border-left:4px solid #4f8cff;
+    background:#eef5ff;
+    color:#1f3b73;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:500;
+    line-height:1.5;
+}
+
+.movies-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:25px;
+
+margin-top:20px;
+
+}
+
+.history-container{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:12px;
+
+margin:20px 0 30px;
+
+}
+
+.history-item{
+
+background:#eef5ff;
+
+color:#1d4ed8;
+
+padding:10px 18px;
+
+border-radius:25px;
+
+font-size:15px;
+
+font-weight:600;
+
+border:1px solid #bfdbfe;
+
+transition:all .3s ease;
+
+cursor:default;
+
+}
+
+.history-item:hover{
+
+background:#2563eb;
+
+color:white;
+
+transform:translateY(-2px);
+
+}
+
+.trailer-btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 20px;
+    background:#e50914;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.trailer-btn:hover{
+    background:#b20710;
+    transform:translateY(-2px);
+}
+
+.favorite-btn{
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    margin-right:10px;
+    margin-top:12px;
+    transition:0.3s;
+}
+
+.favorite-btn:hover{
+    background:#e6395d;
+    transform:translateY(-2px);
+}
+
+.loader{
+    width:18px;
+    height:18px;
+    border:3px solid rgba(255,255,255,.4);
+    border-top:3px solid white;
+    border-radius:50%;
+    display:inline-block;
+    margin-left:10px;
+    animation:spin .8s linear infinite;
+    vertical-align:middle;
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+/* ===========================
+   AUTOCOMPLETE SUGGESTIONS
+=========================== */
+
+.suggestions-box{
+    position:absolute;
+    width:100%;
+    background:#ffffff;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    overflow:hidden;
+    max-height:300px;
+    overflow-y:auto;
+    z-index:9999;
+    display:none;
+    margin-top:5px;
+}
+
+.suggestion-item{
+    padding:14px 18px;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:16px;
+    border-bottom:1px solid #eee;
+}
+
+.suggestion-item:last-child{
+    border-bottom:none;
+}
+
+.suggestion-item:hover{
+    background:#2f66ff;
+    color:white;
+}
+
+/* ===========================
+   DARK MODE
+=========================== */
+
+body.dark{
+
+background:linear-gradient(135deg,#0f172a,#020617);
+
+}
+
+body.dark .header h1{
+
+color:white;
+
+}
+
+body.dark .subtitle{
+
+color:#d1d5db;
+
+}
+
+body.dark .powered{
+
+color:#9ca3af;
+
+}
+
+body.dark input{
+
+background:#1f2937;
+
+color:white;
+
+border:2px solid #374151;
+
+}
+
+body.dark input::placeholder{
+
+color:#9ca3af;
+
+}
+
+body.dark .suggestions-box{
+
+background:#1f2937;
+
+color:white;
+
+}
+
+body.dark .suggestion-item{
+
+border-bottom:1px solid #374151;
+
+}
+
+body.dark .container{
+
+background:#111827;
+
+color:white;
+
+}
+
+body.dark .movie-card{
+
+    background:#1f2937;
+    color:white;
+    border:1px solid #374151;
+    box-shadow:0 12px 35px rgba(0,0,0,.45);
+
+}
+
+body.dark .suggestion-item:hover{
+
+background:#2563eb;
+
+}
+
+/* ==========================
+   AI CHAT BUTTON
+========================== */
+
+.chat-toggle{
+
+position:fixed;
+
+bottom:30px;
+
+right:30px;
+
+width:70px;
+
+height:70px;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+color:white;
+
+font-size:34px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+cursor:pointer;
+
+box-shadow:0 15px 35px rgba(37,99,235,.45);
+
+z-index:99999;
+
+transition:.3s;
+
+}
+
+.chat-toggle:hover{
+
+transform:scale(1.1);
+
+}
+
+/* ==========================
+   CHAT WINDOW
+========================== */
+
+.chat-window{
+
+position:fixed;
+
+bottom:115px;
+
+right:30px;
+
+width:380px;
+
+height:520px;
+
+background:white;
+
+border-radius:20px;
+
+box-shadow:0 25px 60px rgba(0,0,0,.35);
+
+display:none;
+
+flex-direction:column;
+
+overflow:hidden;
+
+z-index:99999;
+
+}
+
+.chat-header{
+
+background:#2563eb;
+
+color:white;
+
+padding:18px;
+
+font-size:20px;
+
+font-weight:bold;
+
+text-align:center;
+
+}
+
+.close-chat{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+}
+
+.close-chat:hover{
+
+    transform:scale(1.2);
+
+    color:#ffb4b4;
+
+}
+
+.chat-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.chat-messages{
+
+flex:1;
+
+padding:15px;
+
+overflow-y:auto;
+
+background:#f8fafc;
+
+}
+
+.bot-message{
+
+background:#e2e8f0;
+
+padding:12px;
+
+border-radius:12px;
+
+margin-bottom:10px;
+
+line-height:1.6;
+
+}
+
+.chat-input{
+
+display:flex;
+
+border-top:1px solid #ddd;
+
+}
+
+.chat-input input{
+
+flex:1;
+
+border:none;
+
+padding:15px;
+
+font-size:15px;
+
+outline:none;
+
+}
+
+.chat-input button{
+
+border:none;
+
+padding:15px 22px;
+
+background:#2563eb;
+
+color:white;
+
+cursor:pointer;
+
+font-weight:bold;
+
+}
+
+.chat-suggestions{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:8px;
+
+margin-top:10px;
+
+margin-bottom:15px;
+
+}
+
+.chip{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:25px;
+
+cursor:pointer;
+
+font-size:13px;
+
+transition:.25s;
+
+}
+
+.chip:hover{
+
+background:#1d4ed8;
+
+transform:translateY(-2px);
+
+}
+
+.search-box{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+.voice-btn{
+
+    position:absolute;
+
+    right:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    border:none;
+
+    background:none;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    transition:.3s;
+
+}
+
+.voice-btn:hover{
+
+    transform:translateY(-50%) scale(1.15);
+
+}
+
+/* ==========================
+   MOOD RECOMMENDATION
+========================== */
+
+.mood-box{
+
+    margin:50px auto;
+
+    max-width:900px;
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:35px;
+
+    text-align:center;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+
+}
+
+.mood-box h3{
+
+    font-size:30px;
+
+    margin-bottom:10px;
+
+    color:#1e293b;
+
+}
+
+.mood-box p{
+
+    color:#64748b;
+
+    margin-bottom:30px;
+
+    font-size:18px;
+
+}
+
+.mood-buttons{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:15px;
+
+}
+
+.mood-btn{
+
+    border:none;
+
+    padding:14px 24px;
+
+    border-radius:50px;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:0 8px 18px rgba(37,99,235,.25);
+
+}
+
+.mood-btn:hover{
+
+    transform:translateY(-3px) scale(1.05);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+    <button id="themeToggle" class="theme-btn">
+        🌙 Dark Mode
+    </button>
+
+    <h1>🎬 Movie Recommendation System</h1>
+
+    <p class="subtitle">
+        Discover Similar Movies Instantly
+    </p>
+
+    <p class="powered">
+        Powered by Machine Learning & TMDB
+    </p>
+
+</div>
+
+<form method="POST" id="movieForm" style="position: relative;">
+
+<div class="search-box">
+
+    <input
+        type="text"
+        id="movie"
+        name="movie"
+        placeholder="Enter Movie Name"
+        autocomplete="off"
+        required
+    >
+
+    <button
+        type="button"
+        id="voiceBtn"
+        class="voice-btn"
+        title="Voice Search"
+    >
+        🎤
+    </button>
+
+</div>
+
+
+
+<div id="suggestions" class="suggestions-box"></div>
+
+<br>
+
+<button type="submit" id="searchBtn">
+
+    <span id="btnText">Recommend</span>
+
+    <span id="loader" class="loader" style="display:none;"></span>
+
+</button>
+
+</form>
+
+{% if not selected_movie and not recommendations %}
+<div class="section-title">
+    🔥 Trending Movies
+</div>
+
+<div class="movies-grid">
+
+{% for movie in trending_movies %}
+
+<div class="movie-card">
+
+    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+
+    <div class="movie-info">
+
+        <h3>{{ movie.title }}</h3>
+
+        <p class="rating">⭐ {{ movie.rating }}</p>
+
+        <p class="release">🗓️ {{ movie.release }}</p>
+
+        <p class="genres">🎭 {{ movie.genres }}</p>
+
+        <p class="runtime">⏱️ {{ movie.runtime }} min</p>
+
+        <p class="overview">{{ movie.overview }}</p>
+
+        <button class="favorite-btn"
+        onclick="saveFavorite(
+        '{{ movie.title|escape }}',
+        '{{ movie.poster }}',
+        '{{ movie.rating }}',
+        '{{ movie.release }}',
+        '{{ movie.genres|escape }}',
+        '{{ movie.runtime }}',
+        '{{ movie.overview|escape }}',
+        '{{ movie.trailer }}'
+        )">
+        ❤️ Save
+        </button>
+
+        {% if movie.trailer %}
+        <a href="{{ movie.trailer }}" target="_blank" class="trailer-btn">
+            ▶ Watch Trailer
+        </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- ==========================
+     AI Mood Recommendation
+========================== -->
+
+<div class="mood-box">
+
+    <h3>🎭 Mood Based Recommendation</h3>
+
+    <p>How are you feeling today?</p>
+
+    <div class="mood-buttons">
+
+        <button class="mood-btn" data-mood="happy">😊 Happy</button>
+
+        <button class="mood-btn" data-mood="sad">😔 Sad</button>
+
+        <button class="mood-btn" data-mood="romantic">❤️ Romantic</button>
+
+        <button class="mood-btn" data-mood="excited">🤩 Excited</button>
+
+        <button class="mood-btn" data-mood="scared">👻 Scared</button>
+
+        <button class="mood-btn" data-mood="relaxed">😌 Relaxed</button>
+
+    </div>
+
+</div>
+
+<hr style="margin:40px 0;">
+
+{% endif %}
+
+{% if search_history %}
+
+<div class="section-title">
+    🕒 Recent Searches
+</div>
+
+<div class="history-container">
+
+    {% for movie in search_history %}
+
+        <span class="history-item">
+            {{ movie }}
+        </span>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+<div class="result" id="resultSection">
+
+    {% if error %}
+<div style="margin-top:20px;
+padding:15px;
+background:#ffe6e6;
+color:#cc0000;
+border-radius:8px;
+font-weight:bold;">
+{{ error }}
+</div>
+{% endif %}
+{% if recommendations %}
+
+{% if selected_movie %}
+
+<div class="section-title">
+    🎬 Selected Movie
+</div>
+
+<div class="selected-movie-card"
+{% if selected_movie.backdrop %}
+style="
+background-image:
+linear-gradient(rgba(15,23,42,.85),rgba(15,23,42,.85)),
+url('{{ selected_movie.backdrop }}');
+
+background-size:cover;
+background-position:center;
+"
+{% endif %}
+>
+
+    <img src="{{ selected_movie.poster }}" alt="{{ selected_movie.title }}">
+
+    <div class="movie-info">
+
+        <h3>{{ selected_movie.title }}</h3>
+
+        <p class="rating">⭐ {{ selected_movie.rating }}</p>
+
+        <p class="release">🗓️ {{ selected_movie.release }}</p>
+
+        <p class="genres">🎭 {{ selected_movie.genres }}</p>
+
+        <p class="runtime">⏱️ {{ selected_movie.runtime }} min</p>
+
+        {% if selected_movie.streaming %}
+        <p class="streaming">
+            📺 Available on:
+            {{ selected_movie.streaming|join(", ") }}
+        </p>
+        {% endif %}
+
+        <p class="overview">{{ selected_movie.overview }}</p>
+
+        <button class="favorite-btn"
+        onclick="saveFavorite(
+        '{{ selected_movie.title|escape }}',
+        '{{ selected_movie.poster }}',
+        '{{ selected_movie.rating }}',
+        '{{ selected_movie.release }}',
+        '{{ selected_movie.genres|escape }}',
+        '{{ selected_movie.runtime }}',
+        '{{ selected_movie.overview|escape }}',
+        '{{ selected_movie.trailer }}'
+        )">
+        ❤️ Save
+        </button>
+
+        {% if selected_movie.trailer %}
+        <a href="{{ selected_movie.trailer }}"
+           target="_blank"
+           class="trailer-btn">
+            ▶ Watch Trailer
+        </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<hr style="margin:40px 0;">
+
+{% endif %}
+
+<div class="section-title">
+    🎥 Recommended Movies
+</div>
+
+<div class="movies-grid">
+
+{% for movie in recommendations %}
+
+<div class="movie-card">
+
+    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+
+    <div class="movie-info">
+
+        <h3>{{ movie.title }}</h3>
+
+        <p class="match {{ movie.match_class }}">
+            🔥 {{ movie.match }}% Match
+        </p>
+
+        <p class="rating">⭐ {{ movie.rating }}</p>
+
+        <p class="release">📅 {{ movie.release }}</p>
+
+        <p class="genres">🎭 {{ movie.genres }}</p>
+
+        <p class="runtime">⏱ {{ movie.runtime }} min</p>
+
+        <div class="confidence {{ movie.match_class }}">
+            🤖 AI Confidence: {{ movie.confidence }}%
+        </div>
+
+        <p class="reason">
+            {{ movie.reason }}
+        </p>
+
+        {% if movie.streaming %}
+        <p class="streaming">
+            📺 Available on:
+            {{ movie.streaming|join(", ") }}
+        </p>
+        {% endif %}
+
+        <p class="overview">{{ movie.overview }}</p>
+
+        <button class="favorite-btn"
+        onclick="saveFavorite(
+        '{{ movie.title|escape }}',
+        '{{ movie.poster }}',
+        '{{ movie.rating }}',
+        '{{ movie.release }}',
+        '{{ movie.genres|escape }}',
+        '{{ movie.runtime }}',
+        '{{ movie.overview|escape }}',
+        '{{ movie.trailer }}'
+        )">
+        ❤️ Save
+        </button>
+
+        {% if movie.trailer %}
+        <a href="{{ movie.trailer }}" target="_blank" class="trailer-btn">
+            ▶ Watch Trailer
+        </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+{% endif %}
+
+<hr style="margin:40px 0;">
+
+<div class="section-title">
+    ❤️ Favorite Movies
+</div>
+
+<div id="favoritesContainer" class="movies-grid">
+</div>
+
+</div>
+
+</div>
+<script>
+function saveFavorite(title, poster, rating, release, genres, runtime, overview, trailer) {
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const exists = favorites.some(movie => movie.title === title);
+
+    if (!exists) {
+
+        favorites.push({
+            title: title,
+            poster: poster,
+            rating: rating,
+            release: release,
+            genres: genres,
+            runtime: runtime,
+            overview: overview,
+            trailer: trailer
+  });
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+
+        alert(title + " added to Favorites ❤️");
+
+    } else {
+
+        alert("This movie is already in Favorites ❤️");
+
+    }
+
+}
+
+</script>
+
+<script>
+const form = document.getElementById("movieForm");
+const button = document.getElementById("searchBtn");
+
+const btnText = document.getElementById("btnText");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", function () {
+
+    button.disabled = true;
+
+    btnText.innerHTML = "Finding Movies...";
+
+    loader.style.display = "inline-block";
+
+});
+
+window.onload = function () {
+
+    const result = document.getElementById("resultSection");
+
+    if(result){
+
+        result.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+    loadFavorites();
+
+};
+function loadFavorites() {
+
+    const container = document.getElementById("favoritesContainer");
+
+    if (!container) return;
+
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    container.innerHTML = "";
+
+    favorites.forEach(movie => {
+
+        container.innerHTML += `
+
+        <div class="movie-card">
+
+            <img src="${movie.poster}" alt="${movie.title}">
+
+            <div class="movie-info">
+
+                <h3>${movie.title}</h3>
+
+                <p class="rating">⭐ ${movie.rating}</p>
+
+                <p class="release">📅 ${movie.release}</p>
+
+                <p class="genres">🎭 ${movie.genres}</p>
+
+                <p class="runtime">⏱ ${movie.runtime} min</p>
+
+                <p class="overview">${movie.overview}</p>
+
+                <button
+                    class="favorite-btn"
+                    onclick="removeFavorite('${movie.title.replace(/'/g, "\\'")}')">
+                    🗑 Remove
+                </button>
+
+                <a
+                    href="${movie.trailer}"
+                    target="_blank"
+                    class="trailer-btn">
+                    ▶ Watch Trailer
+                </a>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function removeFavorite(title) {
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    favorites = favorites.filter(movie => movie.title !== title);
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+
+    loadFavorites();
+
+}
+
+// ================================
+// AUTOCOMPLETE SEARCH
+// ================================
+
+const movieInput = document.getElementById("movie");
+const suggestionsBox = document.getElementById("suggestions");
+
+movieInput.addEventListener("input", async function () {
+
+    const query = this.value.trim();
+
+    if (query.length < 2) {
+        suggestionsBox.style.display = "none";
+        suggestionsBox.innerHTML = "";
+        return;
+    }
+
+    const response = await fetch(`/autocomplete?q=${encodeURIComponent(query)}`);
+    const suggestions = await response.json();
+
+    suggestionsBox.innerHTML = "";
+
+    if (suggestions.length === 0) {
+        suggestionsBox.style.display = "none";
+        return;
+    }
+
+    suggestions.forEach(movie => {
+
+        const div = document.createElement("div");
+
+        div.className = "suggestion-item";
+
+        div.innerText = movie;
+
+        div.onclick = function () {
+
+            movieInput.value = movie;
+
+            suggestionsBox.style.display = "none";
+        };
+
+        suggestionsBox.appendChild(div);
+
+    });
+
+    suggestionsBox.style.display = "block";
+
+});
+
+document.addEventListener("click", function(e){
+
+    if(!movieInput.contains(e.target) && !suggestionsBox.contains(e.target)){
+
+        suggestionsBox.style.display="none";
+
+    }
+
+});
+
+// ================================
+// DARK MODE
+// ================================
+
+const themeToggle = document.getElementById("themeToggle");
+
+// Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+
+    document.body.classList.add("dark");
+
+    themeToggle.innerHTML = "☀️ Light Mode";
+
+}
+
+themeToggle.addEventListener("click", function () {
+
+    document.body.classList.toggle("dark");
+
+    if (document.body.classList.contains("dark")) {
+
+        localStorage.setItem("theme", "dark");
+
+        themeToggle.innerHTML = "☀️ Light Mode";
+
+    } else {
+
+        localStorage.setItem("theme", "light");
+
+        themeToggle.innerHTML = "🌙 Dark Mode";
+
+    }
+
+});
+
+
+
+</script>
+</div>
+<!-- ==========================
+     AI CHAT BUTTON
+========================== -->
+
+<div id="chatToggle" class="chat-toggle">
+    🤖
+</div>
+
+<!-- ==========================
+     AI CHAT WINDOW
+========================== -->
+
+<div id="chatWindow" class="chat-window">
+
+    <div class="chat-header">
+
+        <span>🤖 CineAI Assistant</span>
+
+        <button id="closeChat" class="close-chat">
+          ✕
+        </button>
+
+    </div>
+
+    <div id="chatMessages" class="chat-messages">
+
+        <div class="bot-message">
+            👋 Hello! I'm CineAI.<br><br>
+            Ask me anything about movies.
+        </div>
+
+        <div class="chat-suggestions">
+
+        <button class="chip">🎬 Action</button>
+
+        <button class="chip">🚀 Sci-Fi</button>
+
+        <button class="chip">😂 Comedy</button>
+
+        <button class="chip">👻 Horror</button>
+
+        <button class="chip">❤️ Romance</button>
+
+        </div>
+
+    </div>
+
+    <div class="chat-input">
+
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Ask about movies..."
+        >
+
+        <button id="sendChat">
+            Send
+        </button>
+
+    </div>
+
+</div>
+<script>
+const chatToggle = document.getElementById("chatToggle");
+const chatWindow = document.getElementById("chatWindow");
+const chatInput = document.getElementById("chatInput");
+const sendChat = document.getElementById("sendChat");
+const chatMessages = document.getElementById("chatMessages");
+
+chatToggle.onclick = () => {
+
+    if(chatWindow.style.display==="flex"){
+        chatWindow.style.display="none";
+    }else{
+        chatWindow.style.display="flex";
+    }
+
+};
+
+async function sendMessage(){
+
+    const message = chatInput.value.trim();
+
+    if(message==="") return;
+
+    chatMessages.innerHTML += `
+        <div style="text-align:right;margin:12px;">
+            <div style="
+                display:inline-block;
+                background:#2563eb;
+                color:white;
+                padding:10px 15px;
+                border-radius:15px;
+                max-width:80%;
+            ">
+                ${message}
+            </div>
+        </div>
+    `;
+
+    chatInput.value="";
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Show typing animation
+
+    const typing = document.createElement("div");
+
+    typing.className = "bot-message";
+
+    typing.id = "typing";
+
+    typing.innerHTML = "🤖 <i>Typing...</i>";
+
+    chatMessages.appendChild(typing);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
+    try{
+
+        const response = await fetch("/chat",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                message:message
+            })
+        });
+
+        const data = await response.json();
+
+        // Remove typing animation
+
+        document.getElementById("typing").remove();
+
+        chatMessages.innerHTML += `
+        <div class="bot-message">
+        🤖 ${data.reply.replace(/\n/g,"<br>").replace(/\*\*(.*?)\*\*/g,"<b>$1</b>").replace(/\*(.*?)\*/g,"<b>$1</b>")}
+        </div>
+        `;
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    }catch(e){
+
+        const typing = document.getElementById("typing");
+
+        if(typing){
+
+            typing.remove();
+
+        }
+
+        chatMessages.innerHTML += `
+            <div class="bot-message">
+                ❌ Unable to connect to AI.
+            </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+}
+
+sendChat.onclick = sendMessage;
+
+chatInput.addEventListener("keypress",function(e){
+
+    if(e.key==="Enter"){
+
+        e.preventDefault();
+
+        sendMessage();
+
+    }
+
+});
+
+document.querySelectorAll(".chip").forEach(chip => {
+
+    chip.addEventListener("click", function () {
+
+        document.getElementById("chatInput").value = this.innerText;
+
+        document.getElementById("sendChat").click();
+
+    });
+
+});
+
+/* ==========================
+   VOICE SEARCH
+========================== */
+
+const voiceBtn = document.getElementById("voiceBtn");
+
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+if(SpeechRecognition){
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";
+
+    recognition.interimResults = false;
+
+    recognition.maxAlternatives = 1;
+
+    let listening = false;
+
+    voiceBtn.addEventListener("click", () => {
+
+        if (listening) return;
+
+        listening = true;
+
+        voiceBtn.innerHTML = "🎙️";
+
+        recognition.start();
+
+    });
+
+    recognition.onresult=function(event){
+
+        const transcript = event.results[0][0].transcript;
+
+        movieInput.value = transcript;
+
+        voiceBtn.innerHTML="🎤";
+
+    };
+
+    recognition.onend=function(){
+
+        listening = false;
+
+        voiceBtn.innerHTML="🎤";
+
+    };
+
+    recognition.onerror = function(event){
+
+        console.log(event);
+
+        console.log(event.error);
+
+        alert("Voice Error: " + event.error);
+
+        voiceBtn.innerHTML = "🎤";
+
+    };
+
+}else{
+
+    voiceBtn.style.display="none";
+
+}
+
+// ==========================
+// MOOD BUTTONS
+// ==========================
+
+const moodMovies = {
+
+    happy: [
+        "3 Idiots",
+        "Zootopia",
+        "Toy Story",
+        "The Secret Life of Walter Mitty",
+        "Finding Nemo",
+        "Kung Fu Panda",
+        "Up"
+    ],
+
+    sad: [
+        "The Green Mile",
+        "A Beautiful Mind",
+        "The Pursuit of Happyness",
+        "The Shawshank Redemption",
+        "Life is Beautiful"
+    ],
+
+    romantic: [
+        "Titanic",
+        "La La Land",
+        "The Notebook",
+        "Before Sunrise",
+        "Me Before You"
+    ],
+
+    excited: [
+        "Avengers: Endgame",
+        "John Wick",
+        "Mad Max: Fury Road",
+        "The Dark Knight",
+        "Mission Impossible Fallout"
+    ],
+
+    scared: [
+        "The Conjuring",
+        "Hereditary",
+        "Insidious",
+        "It",
+        "The Nun"
+    ],
+
+    relaxed: [
+        "Forrest Gump",
+        "Soul",
+        "The Intern",
+        "Chef",
+        "The Secret Life of Walter Mitty"
+    ]
+
+};
+
+document.querySelectorAll(".mood-btn").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        const mood = this.dataset.mood;
+
+        const movies = moodMovies[mood];
+
+        const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+
+        document.getElementById("movie").value = randomMovie;
+
+        document.getElementById("searchBtn").click();
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
