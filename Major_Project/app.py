@@ -1,4 +1,5 @@
 import re
+import gdown
 import joblib
 import pandas as pd
 import random
@@ -62,6 +63,25 @@ search_history = []
 # ==============================
 # LOAD DATA
 # ==============================
+
+MODEL_DIR = "model"
+SIMILARITY_PATH = os.path.join(MODEL_DIR, "movie_similarity.pkl")
+
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+if not os.path.exists(SIMILARITY_PATH):
+    print("Downloading movie_similarity.pkl...")
+
+    url = "https://drive.google.com/uc?id=17BeVj2trDrwqHyjh26LF9INN3uwGHXAe"
+
+    gdown.download(
+        url=url,
+        output=SIMILARITY_PATH,
+        quiet=False,
+        fuzzy=True
+    )
+
+    print("Download completed.")
 
 movie_matrix = joblib.load("model/movie_matrix.pkl")
 similarity = joblib.load("model/movie_similarity.pkl")
