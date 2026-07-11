@@ -67,22 +67,30 @@ search_history = []
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_DIR = os.path.join(BASE_DIR, "model")
-SIMILARITY_PATH = os.path.join(MODEL_DIR, "movie_similarity.pkl")
-MATRIX_PATH = os.path.join(MODEL_DIR, "movie_matrix.pkl")
-
 os.makedirs(MODEL_DIR, exist_ok=True)
 
+MATRIX_PATH = os.path.join(MODEL_DIR, "movie_matrix.pkl")
+SIMILARITY_PATH = os.path.join(MODEL_DIR, "movie_similarity.pkl")
+
+# Download movie_matrix.pkl
+if not os.path.exists(MATRIX_PATH):
+    print("Downloading movie_matrix.pkl...")
+    gdown.download(
+        "https://drive.google.com/file/d/1VB26G6yoT5ppljaY0ayhX3Or3K7MhNrk/view?usp=sharing",
+        MATRIX_PATH,
+        quiet=False
+    )
+
+# Download movie_similarity.pkl
 if not os.path.exists(SIMILARITY_PATH):
     print("Downloading movie_similarity.pkl...")
-
-    url = "https://drive.google.com/uc?id=17BeVj2trDrwqHyjh26LF9INN3uwGHXAe"
-
     gdown.download(
-        url,
+        "https://drive.google.com/file/d/17BeVj2trDrwqHyjh26LF9INN3uwGHXAe/view?usp=sharing",
         SIMILARITY_PATH,
-        quiet=False,
-        fuzzy=True
+        quiet=False
     )
+
+print("Loading model files...")
 
 movie_matrix = joblib.load(MATRIX_PATH)
 similarity = joblib.load(SIMILARITY_PATH)
