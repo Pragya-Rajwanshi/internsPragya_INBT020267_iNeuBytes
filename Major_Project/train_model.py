@@ -24,12 +24,11 @@ movie_matrix = data.pivot_table(
 print("Movie Matrix:", movie_matrix.shape)
 
 # Cosine Similarity
-similarity = cosine_similarity(movie_matrix)
 
 os.makedirs("model", exist_ok=True)
 
 joblib.dump(movie_matrix, "model/movie_matrix.pkl")
-joblib.dump(similarity, "model/movie_similarity.pkl")
+
 
 print("\nModel trained successfully.")
 print("Files saved inside model folder.")

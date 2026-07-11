@@ -70,7 +70,6 @@ MODEL_DIR = os.path.join(BASE_DIR, "model")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 MATRIX_PATH = os.path.join(MODEL_DIR, "movie_matrix.pkl")
-SIMILARITY_PATH = os.path.join(MODEL_DIR, "movie_similarity.pkl")
 
 # Download movie_matrix.pkl
 if not os.path.exists(MATRIX_PATH):
@@ -81,19 +80,11 @@ if not os.path.exists(MATRIX_PATH):
         quiet=False
     )
 
-# Download movie_similarity.pkl
-if not os.path.exists(SIMILARITY_PATH):
-    print("Downloading movie_similarity.pkl...")
-    gdown.download(
-        "https://drive.google.com/file/d/17BeVj2trDrwqHyjh26LF9INN3uwGHXAe/view?usp=sharing",
-        SIMILARITY_PATH,
-        quiet=False
-    )
 
 print("Loading model files...")
 
 movie_matrix = joblib.load(MATRIX_PATH)
-similarity = joblib.load(SIMILARITY_PATH)
+
 
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
@@ -380,7 +371,12 @@ def recommend(movie_name):
 
     index = movie_matrix.index.get_loc(movie_id)
 
-    distances = list(enumerate(similarity[index]))
+    scores = cosine_similarity(
+        movie_matrix.iloc[index:index+1],
+        movie_matrix
+    ).flatten()
+
+    distances = list(enumerate(scores))
 
     distances = sorted(
         distances,
