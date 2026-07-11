@@ -72,11 +72,14 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 MATRIX_PATH = os.path.join(MODEL_DIR, "movie_matrix.pkl")
 
 # Download movie_matrix.pkl
+file_id = "1VB26G6yoT5ppljaY0ayhX3Or3K7MhNrk"
+
 if not os.path.exists(MATRIX_PATH):
     print("Downloading movie_matrix.pkl...")
+
     gdown.download(
-        "https://drive.google.com/file/d/1VB26G6yoT5ppljaY0ayhX3Or3K7MhNrk",
-        MATRIX_PATH,
+        id=file_id,
+        output=MATRIX_PATH,
         quiet=False
     )
 
