@@ -44,8 +44,7 @@ htmlcov/
 *.db
 *.sqlite3
 # Large model files
-Major_Project/model/movie_similarity.pkl
-Major_Project/model/movie_matrix.pkl
+model/
 
 # Python cache
 __pycache__/
